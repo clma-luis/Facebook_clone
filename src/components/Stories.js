@@ -36,7 +36,7 @@ const Stories = () => {
             stories.map((story, i) => (
                 <StoryCard key={i} name={story.name} src={story.src} profile={story.profile}/> 
             ))
-        }
+        } 
 
     </div>
   )
