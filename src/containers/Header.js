@@ -68,7 +68,7 @@ const Header = () => {
         className='rounded-full cursor-pointer '
         
       />
-        <p className=' whitespace-nowrap font-semibold pr-3 cursor-pointer'>{session.user.name}</p>
+        <p className='hidden md:inline-flex whitespace-nowrap font-semibold pr-3 cursor-pointer'>{session.user.name}</p>
         <ViewGridIcon className='icon'/>
         <ChatIcon className='icon'/>
         <BellIcon className='icon'/>

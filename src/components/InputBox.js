@@ -4,17 +4,19 @@ import Image from 'next/image'
 import { EmojiHappyIcon } from '@heroicons/react/outline'
 import { CameraIcon, VideoCameraIcon } from '@heroicons/react/solid'
 import { db } from '../../firebase'
-import { collection, addDoc, setDoc, doc, updateDoc} from 'firebase/firestore' 
+import { collection, addDoc, setDoc, doc, updateDoc } from 'firebase/firestore'
 import { storage } from '../../firebase'
-import {  getStorage, ref, uploadBytesResumable, getDownloadURL } from "@firebase/storage";
+import {
+  ref,
+  uploadString,
+  getDownloadURL,
+} from 'firebase/storage'
 
 const InputBox = () => {
   const { data: session } = useSession()
   const inputRef = useRef(null)
   const filePickerRef = useRef(null)
   const [imageToPost, setImageToPost] = useState(null)
-
-
 
   const fullTime = Date.now()
   const today = new Date(fullTime).toUTCString()
@@ -34,27 +36,16 @@ const InputBox = () => {
 
     await addDoc(collection(db, 'posts'), docData).then((docu) => {
       if (imageToPost) {
+        const storageRef = ref(storage, `posts/${docu.id}`)
+        uploadString(storageRef, imageToPost, 'data_url').then(() => {
+          getDownloadURL(storageRef).then(async (url) => {
+            await updateDoc(doc(db, 'posts', docu.id), {
+              postImage: url,
+            })
+          })
+        })
 
-        const storageRef = ref(storage, `/posts/${docu.id}` );
-        const uploadTask = uploadBytesResumable(storageRef, imageToPost)
-        
         removeImage()
-
-        uploadTask.on('state_shanged', (snapshot => {
-          const prog = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        })), (err) => console.log(err),
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(
-           async (url) =>{
-
-              const docRef = doc(db, 'posts', docu.id)
-              const updateTimestamp = await updateDoc(docRef, {
-                timestamp: serverTimestamp()
-            });
-
-            }
-          )
-        }
       }
     })
 

@@ -5,8 +5,8 @@ const Stories = () => {
     const stories = [
         {
         name:"Sonny Sangha",
-        src: "https://links.papareact.com/zof",
-        profile: "https://links.papareact.com/l4v"
+        src: "https://links.papareact.com/zvy",
+        profile: "https://links.papareact.com/4u4"
         },
         {
         name:"Elon Musk",
